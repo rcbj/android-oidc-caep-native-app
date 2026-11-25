@@ -2,6 +2,8 @@
 
 An OpenID Connect client library for native Android apps, in Kotlin, and a CAEP receiver. Package `net.rcbj.oidccaep`. The client is public: Authorization Code with PKCE in the system browser (a Custom Tab), PAR, and DPoP. It is a port of [swift-oidc-caep-native-app](https://github.com/rcbj/swift-oidc-caep-native-app) and keeps its behaviour, its error codes and its test suite; a difference between the two is a bug in one of them unless this file names it.
 
+Documentation: <https://rcbj.github.io/android-oidc-caep-native-app/>. `Documentation/android-app-guide.md` (the integration guide) and `Documentation/reference.md` (the API reference) are written once and copied into the site by `.github/workflows/pages.yml`, which also publishes the Dokka reference at `/api/`.
+
 minSdk 28, compileSdk 37.1 (Compose BOM 2026.11 requires 37.1), AGP 9.5 with its built-in Kotlin, Gradle 9.9 (wrapper), JDK 17. The license is the MIT License in `LICENSE`; the Business Source License used by iya-sts does not apply here.
 
 ## Layout
@@ -16,6 +18,10 @@ minSdk 28, compileSdk 37.1 (Compose BOM 2026.11 requires 37.1), AGP 9.5 with its
 | `scripts/live_iya_sts.py` | The live test's driver: a fresh iya-sts, the registration of a new MFA test user, and `LiveIyaSTSTests` with the Gradle wrapper. |
 | `scripts/setup-emulator.sh` | Run after each emulator start: `adb reverse` for iya-sts's port, iya-sts's root CA into the demo's assets (gitignored), Chrome's `--ignore-certificate-errors-spki-list` for that CA's keys only. |
 | `Dockerfile` | `docker build --target test .` runs the unit suite in a container. |
+| `Documentation` | `android-app-guide.md` (the Swift `native-app-guide.md`'s counterpart) and `reference.md`. Every API name in them is the Kotlin source's; change them with the API. |
+| `docs` | The GitHub Pages site (Jekyll, minima with a sidebar): `index.md`, `demo.md`, `development.md`, `android.md` (every difference from the Swift library). |
+| `library/Module.md` | The Dokka reference's landing page. `./gradlew :library:dokkaGeneratePublicationHtml` writes `library/build/dokka/html`. |
+| `.github/workflows/pages.yml` | Builds the site and Dokka on pushes to `main` that touch the docs or `library/src/main`, and deploys to Pages. Pages must first be set to build from GitHub Actions (the workflow's header). |
 
 ## How the Swift design maps
 
