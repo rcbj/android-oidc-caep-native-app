@@ -1,0 +1,13 @@
+{
+  "//": "The demo's OpenID Connect settings, read by OIDCAppConfiguration.load(context). The defaults point at iya-sts on https://localhost:8081, which the emulator reaches through `adb reverse tcp:8081 tcp:8081` (scripts/setup-emulator.sh), client oidc-caep-android-demo (register it with scripts/register-iya-sts-client.mjs). To use another provider without rebuilding, push a file with the same keys to /sdcard/Android/data/net.rcbj.caepdemo/files/oidc_configuration.json.",
+  "MetadataURL": "https://localhost:8081/.well-known/openid-configuration",
+  "ClientID": "oidc-caep-android-demo",
+  "Scopes": ["openid", "profile", "email", "offline_access", "ssf.read", "ssf.manage"],
+  "RedirectURI": "net.rcbj.caepdemo:/callback",
+  "PostLogoutRedirectURI": "net.rcbj.caepdemo:/logged-out",
+  "DPoP": true,
+  "PAR": "auto",
+  "CAEPEnabled": true,
+  "TrustedCertificates": ["sts-root.pem"],
+  "TrustSystemRoots": false
+}

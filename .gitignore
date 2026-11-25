@@ -1,0 +1,9 @@
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+.kotlin/
+captures/
+# Written by scripts/setup-emulator.sh: the local iya-sts root certificate
+demo/src/main/assets/sts-root.pem
