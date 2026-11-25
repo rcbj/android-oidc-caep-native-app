@@ -3,6 +3,7 @@
 
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.dokka)
 }
 
 val libraryVersion = rootProject.file("VERSION").readText().trim().let { if (it.count { c -> c == '.' } == 1) "$it.0" else it }
@@ -43,4 +44,18 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.okhttp.mockwebserver)
     testImplementation(libs.okhttp.tls)
+}
+
+// The API reference (Dokka 2): `./gradlew :library:dokkaGeneratePublicationHtml` writes library/build/dokka/html,
+// which .github/workflows/pages.yml publishes at /api/ on the documentation site.
+dokka {
+    moduleName.set("android-oidc-caep-native-app")
+    dokkaSourceSets.configureEach {
+        includes.from("Module.md")
+        sourceLink {
+            localDirectory.set(file("src/main/kotlin"))
+            remoteUrl("https://github.com/rcbj/android-oidc-caep-native-app/tree/main/library/src/main/kotlin")
+            remoteLineSuffix.set("#L")
+        }
+    }
 }
