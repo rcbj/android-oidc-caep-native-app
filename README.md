@@ -2,11 +2,15 @@
 
 An OpenID Connect client library for **native Android apps**, written in Kotlin, and a demo app built on it. It is the Android counterpart of [swift-oidc-caep-native-app](https://github.com/rcbj/swift-oidc-caep-native-app) (macOS): the same use case, protections and API shape. The client runs in the app as a **public client** (Authorization Code + PKCE in the system browser, PAR, DPoP) and receives **CAEP** security events through the Shared Signals Framework.
 
+**Documentation:** <https://rcbj.github.io/android-oidc-caep-native-app/>
+
 | Path | |
 |---|---|
 | [`library`](library) | The library, package `net.rcbj.oidccaep`. Android library module, minSdk 28. |
 | [`demo`](demo) | The demo app (`net.rcbj.caepdemo`, Jetpack Compose), which uses the library as any app would. |
-| [`scripts`](scripts) | `register-iya-sts-client.mjs` (registers the demo on iya-sts) and `setup-emulator.sh` (gets the emulator ready). |
+| [`scripts`](scripts) | `register-iya-sts-client.mjs` (registers the demo on iya-sts), `setup-emulator.sh` (gets the emulator ready) and `live_iya_sts.py` (the live test's driver). |
+| [`Documentation`](Documentation) | The integration guide and the API reference. |
+| [`docs`](docs) | The GitHub Pages site. |
 
 ## What it does
 
@@ -43,7 +47,7 @@ accounts.signIn(config.makeAuthenticator(activity))     // a Custom Tab
 val tokens = accounts.getTokenSet()                      // refreshed when due
 ```
 
-Every key of the configuration is documented on `OIDCAppConfiguration`.
+See [Building a native Android app](Documentation/android-app-guide.md) for the walkthrough and the [API reference](Documentation/reference.md) for every option. The [Dokka reference](https://rcbj.github.io/android-oidc-caep-native-app/api/) documents every public declaration, and [Android and macOS](docs/android.md) lists every difference from the Swift library.
 
 ## Build and test
 
