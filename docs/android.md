@@ -38,7 +38,7 @@ This page lists every difference. A difference not listed here is a bug in one o
 | **Demo user interface** | SwiftUI (GTK 4 on Linux) | Jetpack Compose |
 | **Demo's TLS default** | Certificates verified (Linux: off) | Certificates verified against iya-sts's root only, written by `scripts/setup-emulator.sh` |
 | **Minimum OS** | macOS 13 (demo: 14) | Android 9, API 28 |
-| **Distribution** | Swift Package Manager, from version tags | An AAR built from a version tag (no Maven publication yet) |
+| **Distribution** | Swift Package Manager, from version tags | Maven Central (`com.iyasec:oidc-caep-android`), from version tags |
 
 Everything else is the same design on both platforms:
 

@@ -12,21 +12,13 @@ It is the Kotlin port of the Swift library [swift-oidc-caep-native-app](https://
 
 ## Installing
 
-There is no published Maven artifact yet. Build the AAR from a release tag and add it with the library's dependencies:
-
-```sh
-./gradlew :library:assembleRelease     # library/build/outputs/aar/library-release.aar
-```
+`com.iyasec:oidc-caep-android` on Maven Central, with its dependencies:
 
 ```kotlin
 android { defaultConfig { manifestPlaceholders["oidcRedirectScheme"] = "com.example.myapp" } }
 
 dependencies {
-    implementation(files("libs/library-release.aar"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.13.0")
-    implementation("com.squareup.okhttp3:okhttp:5.5.1")
-    implementation("androidx.browser:browser:1.10.0")
+    implementation("com.iyasec:oidc-caep-android:0.1.0")
 }
 ```
 

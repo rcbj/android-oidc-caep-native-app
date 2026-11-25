@@ -25,7 +25,7 @@ An OpenID Connect client library for **native Android apps**, written in Kotlin,
 ```kotlin
 // build.gradle.kts of the app
 android { defaultConfig { manifestPlaceholders["oidcRedirectScheme"] = "com.example.myapp" } }
-dependencies { implementation(project(":library")) }   // or the published artifact, once there is one
+dependencies { implementation("com.iyasec:oidc-caep-android:0.1.0") }   // Maven Central
 ```
 
 Put the settings in `src/main/assets/oidc_configuration.json` (the keys of the Swift library's `OIDCConfiguration.plist`):
@@ -94,6 +94,10 @@ avdmanager create avd -n pixel_api37 -k "system-images;android-37.0;google_apis;
 ```
 
 and `ANDROID_HOME=$HOME/Android/Sdk` with `platform-tools`, `emulator` and `cmdline-tools/latest/bin` on `PATH`. The `google_apis` image (not `google_apis_playstore`) is debuggable, which `setup-emulator.sh` relies on.
+
+## Releases
+
+Each release is `com.iyasec:oidc-caep-android` on [Maven Central](https://central.sonatype.com/artifact/com.iyasec/oidc-caep-android), a version tag on `main`, and a [GitHub Release](https://github.com/rcbj/android-oidc-caep-native-app/releases). `.github/workflows/publish.yml` publishes when a pull request merged into `main` changes the library; see [CLAUDE.md](CLAUDE.md#releases).
 
 ## License
 
