@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: 2026 Iya CyberSecurity Solutions, LLC
+# SPDX-License-Identifier: MIT
+#
+# The whole suite once a day: the unit suite, then the live half (scripts/live_iya_sts.py), which builds iya-sts
+# from its main branch, starts it in memory mode, and runs LiveIyaSTSTests against it: a new test user, a second
+# factor enrolled at sign-in and answered with oathtool, and two CAEP signals.
+name: Nightly
+
+on:
+  schedule:
+    # 06:41 UTC, between two of the other libraries' slots in the 06:00-07:58 window.
+    - cron: '41 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-37.1 build-tools;36.0.0'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: oathtool
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq oathtool
+      - name: Unit suite
+        run: ./gradlew --no-daemon :library:testDebugUnitTest
+      - name: Live iya-sts
+        run: python3 scripts/live_iya_sts.py
+      - name: Test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: library/build/reports/tests
