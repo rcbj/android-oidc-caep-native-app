@@ -13,6 +13,7 @@ minSdk 28, compileSdk 37.1 (Compose BOM 2026.11 requires 37.1), AGP 9.5 with its
 | `library/src/test` | JUnit 4 on the JVM. `StubOP.kt` is the in-memory provider and SSF transmitter. One file per Swift test file; test names follow the Swift ones. |
 | `demo` | The Compose demo (`net.rcbj.caepdemo`): `DemoModel.kt` is the Swift demo's `DemoModel`, `MainActivity.kt` its views. |
 | `scripts/register-iya-sts-client.mjs` | Registers the demo's public client on iya-sts from `demo/src/main/assets/oidc_configuration.json`, grants the SSF roles, creates the test user. Needs `ADMIN_API_CLIENT_SECRET`. |
+| `scripts/live_iya_sts.py` | The live test's driver: a fresh iya-sts, the registration of a new MFA test user, and `LiveIyaSTSTests` with the Gradle wrapper. |
 | `scripts/setup-emulator.sh` | Run after each emulator start: `adb reverse` for iya-sts's port, iya-sts's root CA into the demo's assets (gitignored), Chrome's `--ignore-certificate-errors-spki-list` for that CA's keys only. |
 | `Dockerfile` | `docker build --target test .` runs the unit suite in a container. |
 
@@ -32,6 +33,17 @@ minSdk 28, compileSdk 37.1 (Compose BOM 2026.11 requires 37.1), AGP 9.5 with its
 ./gradlew :library:testDebugUnitTest
 docker build --target test .
 ```
+
+### Live test against iya-sts
+
+```sh
+python3 scripts/live_iya_sts.py
+IYA_STS_IMAGE=iya-sts:local LIVE_STS_PORT=18507 LIVE_DEMO_PORT=18607 python3 scripts/live_iya_sts.py
+```
+
+`LiveIyaSTSTests.kt` is skipped unless `IYA_STS_LIVE_CONFIG` is set; `scripts/live_iya_sts.py` (host `python3`, standard library only) sets it up, as the Swift library's driver does: a fresh iya-sts (memory mode, clustering off, no workers, `oauth2.parRequestUriLifetimeS` 300), an `oidc_configuration.json` from the demo's with a loopback redirect and the iya-sts root as the only trust anchor, the client and a NEW test user registered with `register-iya-sts-client.mjs` in a Node container, then `./gradlew :library:testDebugUnitTest --tests '*LiveIyaSTSTests*' --rerun` on the host. The result comes back through `IYA_STS_LIVE_RESULT`.
+
+The test is the Swift `LiveIyaSTSTests` plus the MFA pattern every iya-sts MFA test uses: it requires a second factor of the new user (`POST /admin-api/users/require-mfa`), the first sign-in ENROLS an authenticator app (`/authn-api/mfa/{id}/setup/totp`, then `setup/confirm` with a code from `oathtool --totp -b <secret>`), and a second sign-in (`reauthenticate`) answers `/authn/totp` with a wrong code (refused) and then the right one. A code is never sent twice in one 30-second step (RFC 6238 section 5.2). `IyaSTSBrowser` walks the screens over `/authn-api` with OkHttp and a cookie jar, trusting the same root; `LoopbackWebAuthenticator`'s `openBrowser` starts the walk on its own thread, because the listener accepts only after `openBrowser` returns. Ports: 18507 and 18607 (the Swift run uses 18506 and 18606); 3000, 8081 and 18481 to 18495 are refused. `.github/workflows/nightly.yml` runs it daily at 06:41 UTC against iya-sts built from `main`.
 
 `unitTests.isReturnDefaultValues` is on, and `OIDCLog` falls back to standard output when `android.util.Log` is a stub, so the JVM tests need no Robolectric.
 

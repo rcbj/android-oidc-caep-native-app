@@ -57,6 +57,15 @@ docker build --target test .              # the unit suite in a container
 
 The unit suite runs against `StubOP`, an in-memory OpenID Provider and SSF transmitter; it is a port of the Swift library's XCTest suite, test for test.
 
+### Live test against iya-sts
+
+```sh
+python3 scripts/live_iya_sts.py                        # builds iya-sts from main
+IYA_STS_IMAGE=iya-sts:local python3 scripts/live_iya_sts.py   # or starts an image already built
+```
+
+It needs Docker, the host's `python3`, the Gradle toolchain above and `oathtool`. It starts a fresh iya-sts in memory mode on 18507, registers a client and a **new test user** of whom a second factor is required, and runs `LiveIyaSTSTests` through the library: the first sign-in enrols an authenticator app at the sign-in screen (codes from `oathtool --totp -b <secret>`), a second sign-in answers the one-time code step (a wrong code first, which must be refused), and the library's CAEP receiver then handles credential-change (the account stays signed in) and session-revoked (the account ends). Trust is the iya-sts root only; TLS verification is never turned off. `.github/workflows/nightly.yml` runs the unit suite and the live run every day at 06:41 UTC.
+
 ## Run the demo
 
 The demo signs in to iya-sts on `https://localhost:8081`, which the emulator reaches through `adb reverse`.
