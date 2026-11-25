@@ -60,6 +60,12 @@ The test is the Swift `LiveIyaSTSTests` plus the MFA pattern every iya-sts MFA t
 - A browser step driven by a script (Chrome DevTools, `adb forward tcp:9333 localabstract:chrome_devtools_remote`) is not a user gesture: Chrome then asks "Continue to <app>?" before handing a redirect to the app. Submit the last step (consent's Allow) with a real tap (`adb shell input tap`) and the hand-off goes straight through.
 - A test user with a second factor has its TOTP secret enrolled at sign-in (iya-sts's `/authn-api/mfa/{id}/setup/totp` and `setup/confirm`) and its codes computed with `oathtool --totp -b <secret>`.
 
+## Releases
+
+A release is `com.iyasec:oidc-caep-android` on Maven Central, a semantic-version tag `vM.N.P` on `main`, and a GitHub Release. `.github/workflows/publish.yml` makes all three after the Tests workflow succeeds on `main` for a commit that came from a merged pull request; a direct push does not release. `.github/scripts/release_decision.py` (the same script as the other client libraries) picks the version: `VERSION` (M.N, read as M.N.0) when it is ahead of what is published, else one patch higher when the library's shipped files (`library/` less its tests, `VERSION`, `gradle/libs.versions.toml`) changed since the last release's tag, else no release. The version reaches Gradle as `-PreleaseVersion` and is never committed. A version already on Maven Central stays; the next release is a new version.
+
+Publishing is the `com.vanniktech.maven.publish` plugin (`library/build.gradle.kts`): the AAR, a sources jar, a javadoc jar built from Dokka's HTML, and the POM, signed and uploaded to the Central Portal, then released automatically (`publishAndReleaseToMavenCentral`). The four repository secrets are `CENTRAL_TOKEN_USERNAME` and `CENTRAL_TOKEN_PASSWORD` (a Central Portal user token for this repository) and `GPG_PRIVATE_KEY` (ASCII-armored) and `GPG_PASSPHRASE`. Without a signing key nothing is signed, so `./gradlew :library:publishToMavenLocal` works anywhere for a local check. The namespace `com.iyasec` is the one the Java libraries publish under.
+
 ## Changes
 
 Branch from `develop`. Open a pull request into `develop` and merge it there. The default branch is `main`, so a closing keyword on that pull request does not close the issue. Close the issue in a comment that names the `develop` commit. Then merge `develop` into `main` and fast-forward `develop` to that same commit so both branches name one hash.

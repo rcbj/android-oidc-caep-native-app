@@ -56,15 +56,7 @@ The identity provider is usually both the OpenID provider and the SSF transmitte
 
 ## 2. Add the library
 
-There is no published Maven artifact yet. Build the AAR from a checkout and add it with its four runtime dependencies:
-
-```sh
-git clone https://github.com/rcbj/android-oidc-caep-native-app.git
-cd android-oidc-caep-native-app
-./gradlew :library:assembleRelease          # library/build/outputs/aar/library-release.aar
-```
-
-Copy `library-release.aar` into your app module's `libs/` folder, then in the app's `build.gradle.kts`:
+The library is published to Maven Central as `com.iyasec:oidc-caep-android`. In the app's `build.gradle.kts`:
 
 ```kotlin
 android {
@@ -76,18 +68,13 @@ android {
 }
 
 dependencies {
-    implementation(files("libs/library-release.aar"))
-    // An AAR file carries no dependency information, so the library's own dependencies are listed here.
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.13.0")
-    implementation("com.squareup.okhttp3:okhttp:5.5.1")
-    implementation("androidx.browser:browser:1.10.0")
+    implementation("com.iyasec:oidc-caep-android:0.1.0")
 }
 ```
 
-The versions are the ones in the library's `gradle/libs.versions.toml` for the release you built. Versions are semantic-version tags on `main`; build from a tag for a reproducible app. While the version is 0.x, a new minor version may change the API.
+The library's own dependencies (OkHttp, kotlinx.coroutines, kotlinx.serialization and `androidx.browser`) come with it through its POM. Versions are semantic-version tags on `main`, each with a GitHub Release, and every release is on Maven Central. While the version is 0.x, a new minor version may change the API.
 
-The library needs JDK 17 to build and runs on API 28 and later. It brings the `INTERNET` permission and the `<queries>` entries Custom Tabs need on Android 11 and later through its manifest.
+The library runs on API 28 and later. It brings the `INTERNET` permission and the `<queries>` entries Custom Tabs need on Android 11 and later through its manifest.
 
 ## 3. Register the app at the identity provider
 

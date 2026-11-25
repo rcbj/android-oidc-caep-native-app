@@ -16,13 +16,7 @@ Everything is in the package `net.rcbj.oidccaep`. The library needs Android 9 (A
 
 ## Install
 
-There is no published Maven artifact yet. Build the AAR from a release tag of [the repository](https://github.com/rcbj/android-oidc-caep-native-app):
-
-```sh
-./gradlew :library:assembleRelease          # library/build/outputs/aar/library-release.aar
-```
-
-Copy it into your app's `libs/` folder and, in the app module's `build.gradle.kts`:
+The library is on [Maven Central](https://central.sonatype.com/artifact/com.iyasec/oidc-caep-android) as `com.iyasec:oidc-caep-android`; Maven Central is among the repositories every Android project already uses. In the app module's `build.gradle.kts`:
 
 ```kotlin
 android {
@@ -32,13 +26,11 @@ android {
 }
 
 dependencies {
-    implementation(files("libs/library-release.aar"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.13.0")
-    implementation("com.squareup.okhttp3:okhttp:5.5.1")
-    implementation("androidx.browser:browser:1.10.0")
+    implementation("com.iyasec:oidc-caep-android:0.1.0")
 }
 ```
+
+Its dependencies (OkHttp, kotlinx.coroutines, kotlinx.serialization, `androidx.browser`) come with it. Each release is also a [GitHub Release](https://github.com/rcbj/android-oidc-caep-native-app/releases).
 
 ## Where to read
 
